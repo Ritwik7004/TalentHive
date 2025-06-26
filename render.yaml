@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: talenthive
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "cd project && PYTHONPATH=$PYTHONPATH:$(pwd)/.. gunicorn project.wsgi:application"
+
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: project.project.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: FROM_EMAIL
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: talenthive-db
+          property: connectionString
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "talenthive.onrender.com,talenthive-c0jn.onrender.com,localhost,127.0.0.1"
+
+databases:
+  - name: talenthive-db
+    databaseName: talenthive
+    user: talenthive 
